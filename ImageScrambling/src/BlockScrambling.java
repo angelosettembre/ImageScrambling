@@ -2,36 +2,39 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import javax.imageio.ImageIO;
+
+import org.apache.commons.io.FileUtils;
 
 public class BlockScrambling {
 
 	private static int totalCols,totalRows;
+	private static int rowsOfSquare,colsOfSquare;
 
 	public static void splitImage(File input)throws IOException{
 		BufferedImage originalImg = ImageIO.read(input);
-		int squareLength = 128;
+		int squareLength = 8;
 
 		int originalWidth = originalImg.getWidth();
 		int originalHeight = originalImg.getHeight();
 
-		int rowsOfSquare = originalHeight / squareLength;
-		int colsOfSquare = originalWidth / squareLength;
+		rowsOfSquare = originalHeight / squareLength;
+		colsOfSquare = originalWidth / squareLength;
 		int squaresCount = colsOfSquare * rowsOfSquare;
 		System.out.println("total numblock "+squaresCount);
 
-		
-        int widthOutOfSquaresRemainder = originalWidth % squareLength;
-        boolean hasWidthRemainder = widthOutOfSquaresRemainder != 0;
-        System.out.println("RESTO withd" + hasWidthRemainder);
-        totalCols = hasWidthRemainder ? colsOfSquare + 1 : colsOfSquare;
-        
-        int heightOutOfSquaresRemainder = originalHeight % squareLength;
-        boolean hasHeightRemainder = heightOutOfSquaresRemainder != 0;
-        System.out.println("RESTO height" + hasHeightRemainder);
-        totalRows = hasHeightRemainder ? rowsOfSquare + 1 : rowsOfSquare;
-		 
+
+
+		totalCols = colsOfSquare;    
+		totalRows = rowsOfSquare;
+
 
 		/**
 		 *  Regular square image chunks crop and output.
@@ -102,9 +105,8 @@ public class BlockScrambling {
 	}
 
 	private static void writeToFile(BufferedImage image, int colNum, int rowNum) throws IOException {
-
-        File file = new File("split/img_" + colNum + "_" + (totalCols - 1) + "_" + rowNum + "_" + (totalRows - 1) + ".jpg");
-        ImageIO.write(image, "jpg", file);
+		File file = new File("split/img_" + colNum + "_" + (totalCols - 1) + "_" + rowNum + "_" + (totalRows - 1) + ".jpg");
+		ImageIO.write(image, "jpg", file);
 	}
 
 	public static void join() throws IOException{
@@ -119,6 +121,7 @@ public class BlockScrambling {
 		 */
 		File folder = new File("split");
 		File[] listOfFiles = folder.listFiles();
+
 		if (listOfFiles.length == 0) {
 			throw new IOException("No files are found in the output folder.");
 		}
@@ -135,12 +138,15 @@ public class BlockScrambling {
 		/**
 		 *  Set up 2d array holding image chunks.
 		 */
+
 		BufferedImage[][] imageChunks = new BufferedImage[cols + 1][rows + 1];
 		for (File file : listOfFiles) {
 			if (file.isFile()) {
 				String[] name = file.getName().split("_");
+				System.out.println("NAME1 "+name[1]+ " NAME3 "+name[3]);
 				int colNum = Integer.parseInt(name[1]);
 				int rowNum = Integer.parseInt(name[3]);
+
 
 				BufferedImage image = ImageIO.read(file);
 
@@ -151,14 +157,28 @@ public class BlockScrambling {
 					totalWidth += image.getWidth();
 				}
 
-
 				imageChunks[colNum][rowNum] = image;
+			}
+		}
+
+		/*SHUFFLING BLOCCHI*/
+		for(int i=0; i<imageChunks.length; i++){
+			for(int j=0; j<imageChunks[i].length; j++){
+				int i1 = (int) (Math.random()*imageChunks.length);
+				int j1 = (int) (Math.random()*imageChunks[i].length);
+
+				BufferedImage tmp = imageChunks[i][j];
+				imageChunks[i][j] = imageChunks[i1][j1];
+				imageChunks[i1][j1] = tmp;
 			}
 		}
 
 		/**
 		 *  Assign image chunks from 2d array to original one image.
 		 */
+
+		System.out.println("TOTAL WIDTH "+totalWidth + "totalHeight "+totalHeight);
+
 		BufferedImage combineImage = new BufferedImage(totalWidth, totalHeight, type);
 		int stackWidth = 0;
 		int stackHeight = 0;
@@ -173,8 +193,9 @@ public class BlockScrambling {
 
 		ImageIO.write(combineImage, "jpg", new File("img/join.jpg"));
 		System.out.println("Image rejoin done.");
-		
-		
+
+		FileUtils.cleanDirectory(new File("split")); 
+
 
 	}
 }

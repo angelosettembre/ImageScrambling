@@ -258,7 +258,7 @@ public class EncryptionSteps {
 			System.out.println(e);
 		}
 		
-		Files.deleteIfExists(Paths.get("img/out.jpg"));
+		//Files.deleteIfExists(Paths.get("img/out.jpg"));
 
 		return result;
 	}
