@@ -1,9 +1,17 @@
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Random;
+import com.sun.media.jai.codec.FileSeekableStream;
+import com.sun.media.jai.codec.ImageCodec;
+import com.sun.media.jai.codec.ImageDecoder;
 
 import javax.imageio.ImageIO;
+import javax.media.jai.JAI;
 
 public class EncryptionSteps {
 	private static BufferedImage img = null;
@@ -11,12 +19,23 @@ public class EncryptionSteps {
 	private static int height;
 
 
-	public static void initialize(File input) throws IOException{
-		img = ImageIO.read(input);
+	public static File initialize(File input) throws IOException{
+		File out = input;
+		if(input.getName().contains(".tif")){
+			FileSeekableStream stream = null;
+
+			stream = new FileSeekableStream(input);
+			ImageDecoder dec = ImageCodec.createImageDecoder("tiff", stream,null);
+			RenderedImage image =   dec.decodeAsRenderedImage(0);
+			JAI.create("filestore",image ,"img/out.jpg","JPEG");
+			out = new File ("img/out.jpg");
+		}
+		img = ImageIO.read(out);
 
 		//get width and height
 		width = img.getWidth();
 		height = img.getHeight();
+		return out;
 	}
 
 	public static File extractBlue(File f) throws IOException{
@@ -39,7 +58,7 @@ public class EncryptionSteps {
 
 		//write image
 		try{
-			f = new File("blue.jpg");
+			f = new File("img/blue.jpg");
 			ImageIO.write(img, "jpg", f);
 		}catch(IOException e){
 			System.out.println(e);
@@ -67,7 +86,7 @@ public class EncryptionSteps {
 
 		//write image
 		try{
-			f = new File("green.jpg");
+			f = new File("img/green.jpg");
 			ImageIO.write(img, "jpg", f);
 		}catch(IOException e){
 			System.out.println(e);
@@ -95,7 +114,7 @@ public class EncryptionSteps {
 
 		//write image
 		try{
-			f = new File("red.jpg");
+			f = new File("img/red.jpg");
 			ImageIO.write(img, "jpg", f);
 		}catch(IOException e){
 			System.out.println(e);
@@ -136,13 +155,13 @@ public class EncryptionSteps {
 		try {
 			String color = input.getName();
 			if(color.contains("blue")){
-				input = new File("blueYCBR.jpg");
+				input = new File("img/blueYCBR.jpg");
 				ImageIO.write(ycb,"jpg", input);
 			}else if(color.contains("red")){
-				input = new File("redYCBR.jpg");
+				input = new File("img/redYCBR.jpg");
 				ImageIO.write(ycb,"jpg", input);
 			}else if(color.contains("green")){
-				input = new File("greenYCBR.jpg");
+				input = new File("img/greenYCBR.jpg");
 				ImageIO.write(ycb,"jpg", input);
 			}
 		} catch (IOException e) {
@@ -181,7 +200,7 @@ public class EncryptionSteps {
 
 			imgH.createGraphics().drawImage(img3, widthImg1+widthImg1, 0, null); // here width is mentioned as width of
 
-			final_image = new File("Final.jpg"); //png can also be used here
+			final_image = new File("img/Final.jpg"); //png can also be used here
 			ImageIO.write(imgH, "jpeg", final_image); //if png is used, write "png" instead "jpeg"
 		}else{
 			//Vertically
@@ -196,7 +215,7 @@ public class EncryptionSteps {
 
 			imgV.createGraphics().drawImage(img3, 0, heightImg1+heightImg1, null); // here width is mentioned as width of
 
-			final_image = new File("Final.jpg"); //png can also be used here
+			final_image = new File("img/Final.jpg"); //png can also be used here
 			ImageIO.write(imgV, "jpeg", final_image); //if png is used, write "png" instead "jpeg"
 		}
 
@@ -233,11 +252,14 @@ public class EncryptionSteps {
 
 		//write image
 		try{
-			result = new File("grayscale.jpg");
+			result = new File("img/grayscale.jpg");
 			ImageIO.write(img, "jpg", result);
 		}catch(IOException e){
 			System.out.println(e);
 		}
+		
+		Files.deleteIfExists(Paths.get("img/out.jpg"));
+
 		return result;
 	}
 

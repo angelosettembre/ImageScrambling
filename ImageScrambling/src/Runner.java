@@ -5,12 +5,12 @@ public class Runner {
 
 	public static void main(String[] args) throws IOException {
 
-		File input = new File("cattura.jpg");
+		File input = new File("img/cattura.jpg");
 		
-		EncryptionSteps.initialize(input);
-		File red = EncryptionSteps.extractRed(input);
-		File green = EncryptionSteps.extractGreen(input);
-		File blue = EncryptionSteps.extractBlue(input);
+		File out = EncryptionSteps.initialize(input);
+		File red = EncryptionSteps.extractRed(out);
+		File green = EncryptionSteps.extractGreen(out);
+		File blue = EncryptionSteps.extractBlue(out);
 		
 		File ycbr_red = EncryptionSteps.rgb2ybcr(red);
 		File ycbr_green = EncryptionSteps.rgb2ybcr(green);
@@ -19,6 +19,7 @@ public class Runner {
 		File final_image = EncryptionSteps.concatenateImage(ycbr_red, ycbr_green, ycbc_blue);
 		File output = EncryptionSteps.convertToGray(final_image);
 		
+	
 		
 	}
 
