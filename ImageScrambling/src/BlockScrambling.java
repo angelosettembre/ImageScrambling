@@ -143,7 +143,7 @@ public class BlockScrambling {
 		for (File file : listOfFiles) {
 			if (file.isFile()) {
 				String[] name = file.getName().split("_");
-				System.out.println("NAME1 "+name[1]+ " NAME3 "+name[3]);
+				//System.out.println("NAME1 "+name[1]+ " NAME3 "+name[3]);
 				int colNum = Integer.parseInt(name[1]);
 				int rowNum = Integer.parseInt(name[3]);
 
