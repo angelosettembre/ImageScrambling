@@ -19,6 +19,7 @@ public class Runner {
 		File final_image = EncryptionSteps.concatenateImage(ycbr_red, ycbr_green, ycbc_blue);
 		File output = EncryptionSteps.convertToGray(final_image);
 		
+		new File("split").mkdir();
 		BlockScrambling.splitImage(output);
 		BlockScrambling.join();
 		
