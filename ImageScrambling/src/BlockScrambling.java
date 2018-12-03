@@ -20,6 +20,7 @@ public class BlockScrambling {
 
 	public static void splitImage(File input)throws IOException{
 		BufferedImage originalImg = ImageIO.read(input);
+		
 		int squareLength = 8;
 
 		int originalWidth = originalImg.getWidth();
@@ -41,6 +42,7 @@ public class BlockScrambling {
 		 */
 		BufferedImage imgs[] = new BufferedImage[squaresCount];
 		int count = 0;
+		System.out.println("Splitting image....");
 		for (int x = 0; x < colsOfSquare; x++) {
 			for (int y = 0; y < rowsOfSquare; y++) {
 				//Initialize the image array with image chunks
@@ -139,6 +141,7 @@ public class BlockScrambling {
 		 *  Set up 2d array holding image chunks.
 		 */
 
+		System.out.println("Rejoining image....");
 		BufferedImage[][] imageChunks = new BufferedImage[cols + 1][rows + 1];
 		for (File file : listOfFiles) {
 			if (file.isFile()) {
@@ -177,7 +180,7 @@ public class BlockScrambling {
 		 *  Assign image chunks from 2d array to original one image.
 		 */
 
-		System.out.println("TOTAL WIDTH "+totalWidth + "totalHeight "+totalHeight);
+		System.out.println("TOTAL WIDTH "+totalWidth + " totalHeight "+totalHeight);
 
 		BufferedImage combineImage = new BufferedImage(totalWidth, totalHeight, type);
 		int stackWidth = 0;
