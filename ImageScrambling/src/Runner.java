@@ -20,7 +20,8 @@ public class Runner {
 		File output = EncryptionSteps.convertToGray(final_image);
 		
 		new File("split").mkdir();
-		BlockScrambling.splitImage(output);
+		int blockSize = 8;
+		BlockScrambling.splitImage(output,blockSize);
 		BlockScrambling.join();
 		
 	}

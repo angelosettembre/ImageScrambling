@@ -18,10 +18,11 @@ public class BlockScrambling {
 	private static int totalCols,totalRows;
 	private static int rowsOfSquare,colsOfSquare;
 
-	public static void splitImage(File input)throws IOException{
+	public static void splitImage(File input,int blockSize)throws IOException{
+
 		BufferedImage originalImg = ImageIO.read(input);
 		
-		int squareLength = 8;
+		int squareLength = blockSize;
 
 		int originalWidth = originalImg.getWidth();
 		int originalHeight = originalImg.getHeight();
