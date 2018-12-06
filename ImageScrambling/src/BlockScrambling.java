@@ -164,7 +164,9 @@ public class BlockScrambling {
 				imageChunks[colNum][rowNum] = image;
 			}
 		}
-
+				
+		writeKey(imageChunks, totalWidth, totalHeight, type, cols, rows);
+		
 		/*SHUFFLING BLOCCHI*/
 		for(int i=0; i<imageChunks.length; i++){
 			for(int j=0; j<imageChunks[i].length; j++){
@@ -199,7 +201,33 @@ public class BlockScrambling {
 		System.out.println("Image rejoin done.");
 
 		FileUtils.cleanDirectory(new File("split")); 
+	}
+	
+	public static void writeKey(BufferedImage[][] img, int w, int h, int type, int cols, int rows) throws IOException {
+		/**
+		 *  Assign image chunks from 2d array to original one image.
+		 */
+		
+		/*Keys.imageKey = new BufferedImage[cols + 1][rows + 1];
+		Keys.imageKey = img;
+		Keys.width = w;
+		Keys.height = h;
+		Keys.cols = cols;
+		Keys.rows = rows;*/
 
+		BufferedImage combineImage = new BufferedImage(w, h, type);
+		int stackWidth = 0;
+		int stackHeight = 0;
+		for (int i = 0; i <= cols; i++) {
+			for (int j = 0; j <= rows; j++) {
+				combineImage.createGraphics().drawImage(img[i][j], stackWidth, stackHeight, null);
+				stackHeight += img[i][j].getHeight();
+			}
+			stackWidth += img[i][0].getWidth();
+			stackHeight = 0;
+		}
 
+		ImageIO.write(combineImage, "jpg", new File("img/KEY.jpg"));
+		System.out.println("Image REEEjoin done.");
 	}
 }

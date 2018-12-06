@@ -189,6 +189,7 @@ public class EncryptionSteps {
 
 		if(x == 0){
 			// horizontally
+			System.out.println("HORIZONTALLY");
 			BufferedImage imgH = new BufferedImage(
 					widthImg1+widthImg1+widthImg1, // Final image will have width and height as
 					heightImg1, // addition of widths and heights of the images we already have
@@ -204,6 +205,7 @@ public class EncryptionSteps {
 			ImageIO.write(imgH, "jpeg", final_image); //if png is used, write "png" instead "jpeg"
 		}else{
 			//Vertically
+			System.out.println("VERTICALLY");
 			BufferedImage imgV = new BufferedImage(
 					widthImg1, // Final image will have width and height as
 					heightImg1+heightImg1+heightImg1, // addition of widths and heights of the images we already have
